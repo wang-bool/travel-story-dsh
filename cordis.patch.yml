@@ -1,0 +1,6 @@
+# travel-agent 插件安装补丁层（dsh.bundle manifest 指向本文件）
+# 通过 `dsh plugin add travel-agent` 安装后，DSH 启动时会把下面这条 insert
+# 并入 profile 的 cordis 组合，从而挂载本插件。
+- insert:
+    - id: travel-agent
+      name: travel-agent

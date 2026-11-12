@@ -1,0 +1,4 @@
+config/travel-agent.config.json
+examples/
+tests/
+*.log

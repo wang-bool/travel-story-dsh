@@ -1,0 +1,60 @@
+{
+  "name": "travel-agent",
+  "version": "0.2.0",
+  "description": "DSH plugin: the full Travel Story app (planning map, timeline, playback, recording) bundled into the DSH web page, plus 18 agent tools (create_trip … apply_plan) that let the model plan and drive trips directly.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wang-bool/travel-story-dsh.git"
+  },
+  "homepage": "https://github.com/wang-bool/travel-story-dsh#readme",
+  "bugs": "https://github.com/wang-bool/travel-story-dsh/issues",
+  "type": "module",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "config",
+    "skills",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node client/build.mjs",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "travel-story",
+    "plugin",
+    "travel",
+    "itinerary",
+    "trip",
+    "map",
+    "geocode"
+  ],
+  "license": "MIT",
+  "author": "wang-bool",
+  "engines": {
+    "node": ">=18"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "devDependencies": {
+    "@phosphor-icons/react": "^2.1.10",
+    "@turf/turf": "^7.1.0",
+    "esbuild": "^0.27.0",
+    "maplibre-gl": "^6.1.0",
+    "mp4-muxer": "^5.2.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
