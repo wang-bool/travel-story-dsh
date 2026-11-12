@@ -105,8 +105,9 @@ travel-agent/
 ## 安装
 
 ```bash
-dsh plugin --profile web add travel-agent
-# 或本地：bash install/install.sh
+# 直接从 GitHub 安装
+dsh plugin --profile web add "github:wang-bool/travel-story-dsh#main"
+# 或克隆到本地后：bash install/install.sh
 ```
 
 安装后重启 dsh web 并刷新浏览器。
