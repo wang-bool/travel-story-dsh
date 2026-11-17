@@ -1,6 +1,6 @@
 {
   "name": "travel-agent",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "DSH plugin: the full Travel Story app (planning map, timeline, playback, recording) bundled into the DSH web page, plus 18 agent tools (create_trip … apply_plan) that let the model plan and drive trips directly.",
   "repository": {
     "type": "git",
@@ -38,14 +38,16 @@
   "license": "MIT",
   "author": "wang-bool",
   "engines": {
-    "node": ">=18"
+    "node": ">=18",
+    "dsh": ">=0.1.0-rc.6"
   },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
     },
     "client": {
-      "platform": "web"
+      "platform": "web",
+      "inject": []
     }
   },
   "devDependencies": {

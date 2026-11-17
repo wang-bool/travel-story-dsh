@@ -208,6 +208,33 @@ await t('数据落盘 + 旧版存储迁移', async () => {
   // 旧版 travel-agent-trips.json 迁移（新起一个 service 进程态 → 用新 import 缓存不行，直接验证文件逻辑在类里即可）
 })
 
+// ── 宿主鉴权：connection.requestRejection 优先于回环判断（模拟新版宿主） ──────
+await t('宿主鉴权：requestRejection 拒绝时返回对应状态码', async () => {
+  let authHandler = null
+  const ctx2 = {
+    get: (key) => key === 'webServer'
+      ? { register: (spec) => { authHandler = spec.handler; return () => {} } }
+      : key === 'connection'
+        ? { requestRejection: (req) => (req.headers['x-untrusted'] ? 403 : undefined) }
+        : undefined,
+    effect: (fn) => { fn() },
+    on: () => {},
+  }
+  apply(ctx2)
+  if (!authHandler) throw new Error('第二次 apply 未注册 handler')
+  const srv = http.createServer((req, res) => { Promise.resolve(authHandler(req, res)).catch((e) => { res.writeHead(500); res.end(String(e)) }) })
+  await new Promise((r) => srv.listen(0, '127.0.0.1', r))
+  try {
+    const b2 = `http://127.0.0.1:${srv.address().port}`
+    const denied = await fetch(b2 + '/travel-agent/trips', { headers: { 'x-untrusted': '1' } })
+    if (denied.status !== 403) throw new Error('被栅栏拒绝的请求应 403，实际 ' + denied.status)
+    const allowed = await fetch(b2 + '/travel-agent/trips')
+    if (allowed.status !== 200) throw new Error('通过栅栏的请求应 200，实际 ' + allowed.status)
+  } finally {
+    srv.close()
+  }
+})
+
 server.close()
 console.log(`\n${passed} passed, ${failed} failed`)
 process.exit(failed ? 1 : 0)

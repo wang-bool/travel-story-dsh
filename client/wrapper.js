@@ -55,7 +55,8 @@ window.__ModuleLoader__.load({
     ].join("\n");
     document.head.appendChild(styleTag);
 
-    // 接管时把 DSH 对话框变成浮窗；元素可能被 React 重挂，定时补挂 class
+    // 接管时把 DSH 对话框变成浮窗；元素可能被宿主 React 重挂，
+    // 用 MutationObserver 事件驱动补挂 class（不做定时轮询）
     function useFloatChat(isOpen) {
       React.useEffect(function () {
         document.body.classList.toggle("travel-agent-open", isOpen);
@@ -69,8 +70,9 @@ window.__ModuleLoader__.load({
           if (el && !el.classList.contains("travel-agent-float-chat")) el.classList.add("travel-agent-float-chat");
         };
         applyFloat();
-        const timer = setInterval(applyFloat, 1000);
-        return function () { clearInterval(timer); };
+        const observer = new MutationObserver(applyFloat);
+        observer.observe(document.body, { subtree: true, childList: true });
+        return function () { observer.disconnect(); };
       }, [isOpen]);
     }
 
